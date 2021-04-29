@@ -45,7 +45,16 @@ public class Database {
     }
 
     public boolean checkForUser(String username){
-       return r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
+        // for some fucking reason, guacamole tries to call this function when there has been no login attempts
+        // so i guess we have to deal with that
+        // thanks, guac
+        boolean h = false;
+        try {
+            h = r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+       return h;
     }
 
     public User getUser(String username){
