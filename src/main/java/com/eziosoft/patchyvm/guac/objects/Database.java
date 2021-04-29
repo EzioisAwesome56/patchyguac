@@ -45,13 +45,7 @@ public class Database {
     }
 
     public boolean checkForUser(String username){
-        boolean h = false;
-        try{
-            h = r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return h;
+       return r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
     }
 
     public User getUser(String username){

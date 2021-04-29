@@ -27,7 +27,7 @@ public class Auth extends SimpleAuthenticationProvider{
         // do we already have config loaded?
         if (c == null) {
             // check to see if the config file exists (where ever it goes idfk)
-            File config = new File("/etc/patchy/config.json");
+            File config = new File("/var/lib/tomcat9/conf/Catalina/config.json");
             Gson g = new GsonBuilder().setPrettyPrinting().create();
             try {
                 if (!config.exists()) {
@@ -52,7 +52,6 @@ public class Auth extends SimpleAuthenticationProvider{
                 return null;
             }
         }
-        System.err.println("Config file loaded, proof: salt = " + c.getSalt());
         // do we have the db loaded and configured?
         if (db == null){
             db = new Database(c.getDbip(), c.getDbport(), c.getDbuser(), c.getDbpass(), false);
@@ -64,7 +63,6 @@ public class Auth extends SimpleAuthenticationProvider{
             // fail
             return null;
         }
-        System.err.println("We have checked the db for user!");
         // load user
         User u = db.getUser(credentials.getUsername());
         // do the pash hashes matches
