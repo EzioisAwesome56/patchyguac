@@ -1,0 +1,12 @@
+{
+
+  "guacamoleVersion" : "1.3.0",
+
+  "name"      : "PatchyVM-Compatible Authentication Plugin",
+  "namespace" : "patchyvm-rethink-auth",
+
+  "authProviders" : [
+    "com.eziosoft.patchyvm.guac.Auth"
+  ]
+
+}
