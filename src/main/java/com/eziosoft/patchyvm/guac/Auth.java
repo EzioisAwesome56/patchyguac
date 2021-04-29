@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.auth.Credentials;
 import org.apache.guacamole.net.auth.simple.SimpleAuthenticationProvider;
+import org.apache.guacamole.net.auth.simple.SimpleSystemPermissionSet;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -46,14 +47,15 @@ public class Auth extends SimpleAuthenticationProvider{
             // load it!
             try {
                 c = g.fromJson(new BufferedReader(new FileReader(config)), Config.class);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
+        System.err.println("Config file loaded, proof: salt = " + c.getSalt());
         // do we have the db loaded and configured?
         if (db == null){
-            db = new Database(c.getDbip(), c.getDbport(), c.getDbuser(), c.getDbpass(), c.isNeedsinfo());
+            db = new Database(c.getDbip(), c.getDbport(), c.getDbuser(), c.getDbpass(), false);
             db.initDB();
         }
         // now we can actually do auth things lol
@@ -62,6 +64,7 @@ public class Auth extends SimpleAuthenticationProvider{
             // fail
             return null;
         }
+        System.err.println("We have checked the db for user!");
         // load user
         User u = db.getUser(credentials.getUsername());
         // do the pash hashes matches

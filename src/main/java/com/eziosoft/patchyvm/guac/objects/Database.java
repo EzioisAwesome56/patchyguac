@@ -16,8 +16,8 @@ public class Database {
     private String vms = "vms";
     private String user = "users";
 
-    private Connection thonk;
-    private final RethinkDB r = RethinkDB.r;
+    private static Connection thonk;
+    private static final RethinkDB r = RethinkDB.r;
     private Gson g = new Gson();
 
     public Database(String ip, int port, String username, String password, boolean h){
@@ -45,7 +45,13 @@ public class Database {
     }
 
     public boolean checkForUser(String username){
-        return r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
+        boolean h = false;
+        try{
+            h = r.table(user).getAll(username).count().eq(1).run(thonk, boolean.class).first();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return h;
     }
 
     public User getUser(String username){
