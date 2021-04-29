@@ -1,5 +1,6 @@
 package com.eziosoft.patchyvm.guac.objects;
 
+import com.eziosoft.patchyvm.guac.Auth;
 import com.google.gson.Gson;
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.net.Connection;
@@ -10,6 +11,7 @@ public class Database {
     private int port;
     private String username;
     private String password;
+    private boolean h;
 
     private String vms = "vms";
     private String user = "users";
@@ -18,18 +20,28 @@ public class Database {
     private final RethinkDB r = RethinkDB.r;
     private Gson g = new Gson();
 
-    public Database(String ip, int port, String username, String password){
+    public Database(String ip, int port, String username, String password, boolean h){
         this.ip = ip;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.h = h;
     }
 
     public void initDB(){
-        // just run thru the stuff
-        Connection.Builder builder = r.connection().hostname(ip).port(port).user(username, password);
-        thonk = builder.connect();
-        thonk.use("rentavm");
+        try {
+            // just run thru the stuff
+            Connection.Builder builder = null;
+            if (h) {
+                builder = r.connection().hostname(ip).port(port).user(username, password);
+            } else {
+                builder = r.connection().hostname(ip).port(port);
+            }
+            thonk = builder.connect();
+            thonk.use("rentavm");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public boolean checkForUser(String username){

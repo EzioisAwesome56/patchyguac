@@ -7,6 +7,7 @@ public class Config {
     private String dbuser;
     private String dbpass;
     private String salt;
+    private boolean needsinfo;
 
     public Config(){};
 
@@ -16,6 +17,7 @@ public class Config {
         this.dbpass = "mycoolpassword";
         this.dbuser = "gamer moments";
         this.salt = "haha salt";
+        this.needsinfo = false;
     }
 
     public int getDbport() {
@@ -37,4 +39,6 @@ public class Config {
     public String getSalt() {
         return salt;
     }
+
+    public boolean isNeedsinfo(){return this.needsinfo; }
 }

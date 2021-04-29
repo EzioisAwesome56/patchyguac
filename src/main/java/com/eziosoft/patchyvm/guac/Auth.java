@@ -26,9 +26,8 @@ public class Auth extends SimpleAuthenticationProvider{
         // do we already have config loaded?
         if (c == null) {
             // check to see if the config file exists (where ever it goes idfk)
-            File config = new File("config.json");
+            File config = new File("/etc/patchy/config.json");
             Gson g = new GsonBuilder().setPrettyPrinting().create();
-            Config c = null;
             try {
                 if (!config.exists()) {
                     System.err.println("No config file found! Generating defaults...");
@@ -54,7 +53,7 @@ public class Auth extends SimpleAuthenticationProvider{
         }
         // do we have the db loaded and configured?
         if (db == null){
-            db = new Database(c.getDbip(), c.getDbport(), c.getDbuser(), c.getDbpass());
+            db = new Database(c.getDbip(), c.getDbport(), c.getDbuser(), c.getDbpass(), c.isNeedsinfo());
             db.initDB();
         }
         // now we can actually do auth things lol
@@ -65,13 +64,13 @@ public class Auth extends SimpleAuthenticationProvider{
         }
         // load user
         User u = db.getUser(credentials.getUsername());
-        // do the pash hashes match?
-        if (!BCrypt.haspw(credentials.getPassword(), c.getSalt()).equals(u.getPasshash())){
+        // do the pash hashes matches
+        if (!BCrypt.hashpw(credentials.getPassword(), c.getSalt()).equals(u.getPasshash())){
             // fail
             return null;
         }
         // do they even have a vm?
-        if (u.getVmid() ==  0){
+        if (u.getVmid() == 0){
             // fail
             return null;
         }
@@ -88,6 +87,6 @@ public class Auth extends SimpleAuthenticationProvider{
 
     @Override
     public String getIdentifier() {
-        return null;
+        return "patchyVM";
     }
 }
